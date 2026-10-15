@@ -1,0 +1,83 @@
+// Prisma schema for the hairstylist booking site.
+//
+// DEV uses SQLite (zero setup). To deploy on PostgreSQL (Neon + Vercel):
+//   1. Change `provider` below to "postgresql".
+//   2. Set DATABASE_URL to your Neon connection string.
+//   3. Run `npx prisma migrate deploy` (or `migrate dev` locally).
+// The models below are written portably (no provider-specific types / enums),
+// so the switch needs no other changes.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// A bookable service (cut, color, etc.). Price stored in cents to avoid floats.
+model Service {
+  id              String    @id @default(cuid())
+  name            String
+  description     String    @default("")
+  durationMinutes Int
+  priceCents      Int
+  active          Boolean   @default(true)
+  sortOrder       Int       @default(0)
+  bookings        Booking[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+/// A customer appointment. status is one of: PENDING | CONFIRMED | CANCELLED.
+model Booking {
+  id            String   @id @default(cuid())
+  service       Service  @relation(fields: [serviceId], references: [id])
+  serviceId     String
+  customerName  String
+  customerEmail String
+  customerPhone String
+  startTime     DateTime
+  endTime       DateTime
+  status        String   @default("CONFIRMED")
+  notes         String   @default("")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([startTime])
+  @@index([status])
+}
+
+/// Weekly recurring working hours. dayOfWeek: 0 = Sunday ... 6 = Saturday.
+/// startMinutes / endMinutes are minutes from midnight (e.g. 9:00 = 540).
+model AvailabilityRule {
+  id           String  @id @default(cuid())
+  dayOfWeek    Int
+  startMinutes Int
+  endMinutes   Int
+  active       Boolean @default(true)
+
+  @@index([dayOfWeek])
+}
+
+/// A one-off blocked range (vacation, break, personal time).
+model TimeOff {
+  id        String   @id @default(cuid())
+  start     DateTime
+  end       DateTime
+  reason    String   @default("")
+  createdAt DateTime @default(now())
+
+  @@index([start])
+}
+
+/// Single-row site settings (id is always "singleton").
+model Settings {
+  id               String @id @default("singleton")
+  businessName     String @default("Your Salon")
+  tagline          String @default("Book your next appointment")
+  slotIntervalMins Int    @default(30)
+  leadTimeMins     Int    @default(120)
+  maxDaysOut       Int    @default(60)
+}

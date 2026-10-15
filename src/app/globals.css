@@ -1,0 +1,134 @@
+@import "tailwindcss";
+
+/*
+ * ────────────────────────────────────────────────────────────────────────
+ *  BRAND DESIGN TOKENS — the one place to change colors & fonts.
+ *  Palette: #800080 purple · #C9A0DC lilac · #DAA520 goldenrod.
+ *  Swap these values (and the fonts in layout.tsx) to rebrand the whole site.
+ * ────────────────────────────────────────────────────────────────────────
+ */
+@theme {
+  /* Neutrals / surfaces */
+  --color-paper: #faf6fb; /* airy page background */
+  --color-ink: #241028; /* near-black plum text */
+  --color-muted: #6f5c78; /* secondary text */
+  --color-card: #ffffff;
+  --color-border: #ebe0f1;
+
+  /* Purple */
+  --color-brand: #800080;
+  --color-brand-700: #6c0a6c;
+  --color-brand-deep: #3a0d3f;
+
+  /* Moody plum (dark booking surfaces) */
+  --color-plum: #170718;
+  --color-plum-800: #2a0f30;
+  --color-plum-700: #3d1744;
+
+  /* Lilac */
+  --color-lilac: #c9a0dc;
+  --color-lilac-200: #e6d4f0;
+  --color-lilac-soft: #f4ecf9;
+
+  /* Gold */
+  --color-gold: #daa520;
+  --color-gold-200: #ecd08a;
+  --color-gold-soft: #faf1d6;
+
+  /* Type */
+  --font-display: var(--font-andrea), "Segoe Script", "Brush Script MT", cursive;
+  --font-serif: var(--font-playfair), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+
+  /* Radii */
+  --radius-card: 1.1rem;
+
+  /* Motion */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Small, letter-spaced uppercase label used above display headings. */
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+/* Thin gold divider rule. */
+.gold-rule {
+  height: 2px;
+  width: 3.5rem;
+  background: linear-gradient(90deg, var(--color-gold), transparent);
+}
+
+/* Vertical decorative word (editorial flourish). */
+.vertical-word {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  letter-spacing: 0.25em;
+}
+
+/* Gradient used behind moody booking / footer sections. */
+.plum-gradient {
+  background:
+    radial-gradient(
+      120% 90% at 10% 0%,
+      rgba(128, 0, 128, 0.35) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      90% 80% at 100% 100%,
+      rgba(218, 165, 32, 0.12) 0%,
+      transparent 50%
+    ),
+    var(--color-plum);
+}
+
+/* Animations */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.6s var(--ease-out-soft) both;
+}
+.animate-fade-in {
+  animation: fade-in 0.5s var(--ease-out-soft) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .animate-fade-in {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
