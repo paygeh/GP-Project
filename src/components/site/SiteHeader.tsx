@@ -1,15 +1,13 @@
 import Link from "next/link";
 
-export function Wordmark({ name, dark = false }: { name: string; dark?: boolean }) {
+// `dark` is accepted for call-site compatibility but the logo is a transparent
+// image, so it renders the same on light or dark headers.
+export function Wordmark({ name }: { name: string; dark?: boolean }) {
   return (
-    <Link href="/" className="inline-flex items-center">
-      <span
-        className={`font-display text-2xl leading-tight sm:text-3xl ${
-          dark ? "text-paper" : "text-brand"
-        }`}
-      >
-        {name}
-      </span>
+    <Link href="/" className="inline-flex items-center" aria-label={name}>
+      {/* Plain <img> (not next/image) per AGENTS.md note on this Next version. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/logo.png" alt={name} className="h-11 w-auto sm:h-14" />
     </Link>
   );
 }

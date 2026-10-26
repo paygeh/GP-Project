@@ -285,7 +285,7 @@ function ServiceStep({
                 <Icon className="h-6 w-6" />
               </span>
               <span className="flex-1">
-                <span className="block font-display text-lg text-paper">
+                <span className="block font-script text-xl font-semibold text-paper">
                   {s.name}
                 </span>
                 <span className="mt-0.5 flex items-center gap-2 text-xs text-paper/60">

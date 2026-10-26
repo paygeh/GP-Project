@@ -35,10 +35,15 @@ export default async function Home() {
           </span>
 
           <div className="max-w-2xl animate-fade-up">
-            <p className="eyebrow text-gold">Hairstylist · By appointment</p>
+            <p className="eyebrow text-brand">Hairstylist · By appointment</p>
             <div className="gold-rule mt-5" />
-            <h1 className="mt-4 pb-2 font-display text-6xl leading-[1.15] text-brand sm:text-7xl md:text-8xl">
-              {settings.businessName}
+            <h1 className="mt-4">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo.png"
+                alt={settings.businessName}
+                className="w-full max-w-md md:max-w-lg"
+              />
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
               {settings.tagline}. Browse the services, find a time that works for
@@ -80,7 +85,7 @@ export default async function Home() {
         <div className="mx-auto max-w-6xl px-5 sm:px-8">
           <div className="mb-14 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
             <div>
-              <p className="eyebrow text-gold">The Menu</p>
+              <p className="eyebrow text-brand">The Menu</p>
               <h2 className="mt-3 font-display text-4xl text-ink sm:text-5xl">
                 Services &amp; Pricing
               </h2>
@@ -105,7 +110,7 @@ export default async function Home() {
                     <span className="flex h-14 w-14 items-center justify-center rounded-full bg-lilac-soft text-brand transition group-hover:bg-lilac/40">
                       <Icon className="h-7 w-7" />
                     </span>
-                    <h3 className="mt-5 font-display text-2xl text-brand">
+                    <h3 className="mt-5 font-script text-2xl font-semibold text-brand">
                       {service.name}
                     </h3>
                     <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">

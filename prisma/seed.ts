@@ -2,65 +2,53 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+// Prices/durations are starting points — edit them in Admin → Services.
 const SERVICES = [
   {
-    name: "Women's Haircut & Style",
-    description: "Consultation, shampoo, precision cut, and a finished style.",
-    durationMinutes: 60,
-    priceCents: 6500,
+    name: "Haircut",
+    description: "Consultation, cut, and a finished style.",
+    durationMinutes: 45,
+    priceCents: 4500,
     sortOrder: 1,
   },
   {
-    name: "Men's Haircut",
-    description: "Clean, tailored cut with styling.",
-    durationMinutes: 30,
-    priceCents: 3500,
+    name: "Braids",
+    description: "Protective braiding styled just for you.",
+    durationMinutes: 180,
+    priceCents: 15000,
     sortOrder: 2,
   },
   {
-    name: "Blowout & Style",
-    description: "Shampoo and a smooth, voluminous blow-dry.",
-    durationMinutes: 45,
-    priceCents: 5000,
+    name: "Shampoo",
+    description: "Cleanse and condition with a relaxing scalp massage.",
+    durationMinutes: 30,
+    priceCents: 2500,
     sortOrder: 3,
   },
   {
-    name: "Root Touch-Up Color",
-    description: "Single-process color to refresh your roots.",
-    durationMinutes: 90,
-    priceCents: 9500,
+    name: "Blowout",
+    description: "Smooth, voluminous blow-dry and style.",
+    durationMinutes: 45,
+    priceCents: 4500,
     sortOrder: 4,
   },
   {
-    name: "Balayage / Highlights",
-    description: "Hand-painted, dimensional color with a gloss and style.",
-    durationMinutes: 150,
-    priceCents: 18000,
+    name: "Silk Press",
+    description: "Sleek, smooth press for a flowing, polished finish.",
+    durationMinutes: 90,
+    priceCents: 7500,
     sortOrder: 5,
-  },
-  {
-    name: "Keratin Smoothing Treatment",
-    description: "Frizz-reducing treatment for smoother, healthier hair.",
-    durationMinutes: 120,
-    priceCents: 16000,
-    sortOrder: 6,
-  },
-  {
-    name: "Special Occasion Updo",
-    description: "An elegant updo for weddings, events, and photoshoots.",
-    durationMinutes: 60,
-    priceCents: 8500,
-    sortOrder: 7,
   },
 ];
 
 // Working hours. dayOfWeek: 0=Sun..6=Sat ; minutes from midnight.
+// Monday–Friday, 9am–6pm.
 const RULES = [
-  { dayOfWeek: 2, startMinutes: 9 * 60, endMinutes: 19 * 60 }, // Tue 9–7
-  { dayOfWeek: 3, startMinutes: 9 * 60, endMinutes: 19 * 60 }, // Wed 9–7
-  { dayOfWeek: 4, startMinutes: 9 * 60, endMinutes: 19 * 60 }, // Thu 9–7
-  { dayOfWeek: 5, startMinutes: 9 * 60, endMinutes: 19 * 60 }, // Fri 9–7
-  { dayOfWeek: 6, startMinutes: 9 * 60, endMinutes: 16 * 60 }, // Sat 9–4
+  { dayOfWeek: 1, startMinutes: 9 * 60, endMinutes: 18 * 60 }, // Mon 9–6
+  { dayOfWeek: 2, startMinutes: 9 * 60, endMinutes: 18 * 60 }, // Tue 9–6
+  { dayOfWeek: 3, startMinutes: 9 * 60, endMinutes: 18 * 60 }, // Wed 9–6
+  { dayOfWeek: 4, startMinutes: 9 * 60, endMinutes: 18 * 60 }, // Thu 9–6
+  { dayOfWeek: 5, startMinutes: 9 * 60, endMinutes: 18 * 60 }, // Fri 9–6
 ];
 
 async function main() {
@@ -70,7 +58,7 @@ async function main() {
     update: {},
     create: {
       id: "singleton",
-      businessName: "Hair Studio",
+      businessName: "Imagine That Hair Experience with Lizzy",
       tagline: "Effortless booking for your next appointment",
       slotIntervalMins: 30,
       leadTimeMins: 120,

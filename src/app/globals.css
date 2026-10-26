@@ -3,40 +3,42 @@
 /*
  * ────────────────────────────────────────────────────────────────────────
  *  BRAND DESIGN TOKENS — the one place to change colors & fonts.
- *  Palette: #800080 purple · #C9A0DC lilac · #DAA520 goldenrod.
+ *  Palette (from the Imagine That logo): #E10E79 hot pink · #16060F near-black ·
+ *  #FF3DAB bright pink accent · #F09EC9 soft pink.
  *  Swap these values (and the fonts in layout.tsx) to rebrand the whole site.
  * ────────────────────────────────────────────────────────────────────────
  */
 @theme {
   /* Neutrals / surfaces */
-  --color-paper: #faf6fb; /* airy page background */
-  --color-ink: #241028; /* near-black plum text */
-  --color-muted: #6f5c78; /* secondary text */
+  --color-paper: #fbf4f8; /* airy page background (warm pink-white) */
+  --color-ink: #1b0f16; /* near-black text */
+  --color-muted: #7c6670; /* secondary text (mauve-gray) */
   --color-card: #ffffff;
-  --color-border: #ebe0f1;
+  --color-border: #f1dbe8;
 
-  /* Purple */
-  --color-brand: #800080;
-  --color-brand-700: #6c0a6c;
-  --color-brand-deep: #3a0d3f;
+  /* Pink / magenta (primary brand — sampled from the logo) */
+  --color-brand: #e10e79;
+  --color-brand-700: #b80b61;
+  --color-brand-deep: #700638;
 
-  /* Moody plum (dark booking surfaces) */
-  --color-plum: #170718;
-  --color-plum-800: #2a0f30;
-  --color-plum-700: #3d1744;
+  /* Near-black moody surfaces (dark booking flow) */
+  --color-plum: #16060f;
+  --color-plum-800: #260f1b;
+  --color-plum-700: #3c1a2a;
 
-  /* Lilac */
-  --color-lilac: #c9a0dc;
-  --color-lilac-200: #e6d4f0;
-  --color-lilac-soft: #f4ecf9;
+  /* Soft pink (tints, unselected states) */
+  --color-lilac: #f09ec9;
+  --color-lilac-200: #f8d0e5;
+  --color-lilac-soft: #fceaf3;
 
-  /* Gold */
-  --color-gold: #daa520;
-  --color-gold-200: #ecd08a;
-  --color-gold-soft: #faf1d6;
+  /* Bright hot-pink accent (selected states, CTAs, eyebrow labels, dividers) */
+  --color-gold: #ff3dab;
+  --color-gold-200: #ff8acb;
+  --color-gold-soft: #fee3f1;
 
   /* Type */
   --font-display: var(--font-andrea), "Segoe Script", "Brush Script MT", cursive;
+  --font-script: var(--font-dancing), "Segoe Script", cursive; /* legible script — service titles */
   --font-serif: var(--font-playfair), Georgia, "Times New Roman", serif;
   --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
 
@@ -85,12 +87,12 @@ body {
   background:
     radial-gradient(
       120% 90% at 10% 0%,
-      rgba(128, 0, 128, 0.35) 0%,
+      rgba(225, 14, 121, 0.4) 0%,
       transparent 55%
     ),
     radial-gradient(
       90% 80% at 100% 100%,
-      rgba(218, 165, 32, 0.12) 0%,
+      rgba(255, 61, 171, 0.14) 0%,
       transparent 50%
     ),
     var(--color-plum);

@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter } from "next/font/google";
+import { Playfair_Display, Inter, Dancing_Script } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
+
+// Legible script used for service titles.
+const dancing = Dancing_Script({
+  subsets: ["latin"],
+  variable: "--font-dancing",
+  display: "swap",
+  weight: ["500", "600", "700"],
+});
 
 // Titles use the Andrea Bellarosa script (personal-use license — see README).
 const andrea = localFont({
@@ -36,7 +44,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${andrea.variable} ${playfair.variable} ${inter.variable}`}
+      className={`${andrea.variable} ${dancing.variable} ${playfair.variable} ${inter.variable}`}
     >
       <body>{children}</body>
     </html>
