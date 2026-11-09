@@ -24,6 +24,7 @@ export default async function BookPage({
         description: true,
         durationMinutes: true,
         priceCents: true,
+        depositCents: true,
       },
     }),
     prisma.availabilityRule.findMany({

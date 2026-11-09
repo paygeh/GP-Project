@@ -19,6 +19,7 @@ type Service = {
   description: string;
   durationMinutes: number;
   priceCents: number;
+  depositCents: number;
 };
 
 type Props = {
@@ -293,8 +294,15 @@ function ServiceStep({
                   {formatDuration(s.durationMinutes)}
                 </span>
               </span>
-              <span className="font-serif text-lg font-semibold text-gold">
-                {formatPrice(s.priceCents)}
+              <span className="text-right">
+                <span className="block font-serif text-lg font-semibold text-gold">
+                  {formatPrice(s.priceCents)}
+                </span>
+                {s.depositCents > 0 && (
+                  <span className="block text-[11px] text-paper/50">
+                    {formatPrice(s.depositCents)} deposit
+                  </span>
+                )}
               </span>
             </button>
           );
@@ -561,6 +569,9 @@ function ReviewStep({
     ["Time", formatTime(start)],
     ["Duration", formatDuration(service.durationMinutes)],
     ["Price", formatPrice(service.priceCents)],
+    ...(service.depositCents > 0
+      ? [["Deposit", `${formatPrice(service.depositCents)} to book`]]
+      : []),
     ["Name", details.customerName],
     ["Email", details.customerEmail],
     ["Phone", details.customerPhone],

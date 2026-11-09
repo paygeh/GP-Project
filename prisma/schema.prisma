@@ -23,6 +23,7 @@ model Service {
   description     String    @default("")
   durationMinutes Int
   priceCents      Int
+  depositCents    Int       @default(0)
   active          Boolean   @default(true)
   sortOrder       Int       @default(0)
   bookings        Booking[]
@@ -81,4 +82,7 @@ model Settings {
   slotIntervalMins Int    @default(30)
   leadTimeMins     Int    @default(120)
   maxDaysOut       Int    @default(60)
+  // Shown to clients in their confirmation email so they can reach Lizzy.
+  contactEmail     String @default("")
+  contactPhone     String @default("")
 }

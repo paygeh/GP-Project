@@ -75,6 +75,9 @@ export default async function ConfirmationPage({
                 ],
                 ["Duration", formatDuration(booking.service.durationMinutes)],
                 ["Price", formatPrice(booking.service.priceCents)],
+                ...(booking.service.depositCents > 0
+                  ? [["Deposit", `${formatPrice(booking.service.depositCents)} to book`]]
+                  : []),
               ].map(([k, v]) => (
                 <div key={k} className="flex justify-between gap-4 py-3 text-sm">
                   <dt className="text-paper/55">{k}</dt>

@@ -1,9 +1,12 @@
 "use server";
 
 import { prisma } from "@/lib/db";
-import { getAvailableSlots, isSlotBookable } from "@/lib/availability";
+import { getAvailableSlots, isSlotBookable, getSettings } from "@/lib/availability";
 import { bookingSchema } from "@/lib/validators";
-import { sendAppointmentRequestEmail } from "@/lib/email";
+import {
+  sendAppointmentRequestEmail,
+  sendClientSummaryEmail,
+} from "@/lib/email";
 
 /** Return bookable start times (ISO strings) for a service on a given day. */
 export async function getSlotsAction(
@@ -72,8 +75,10 @@ export async function createRequestAction(
     },
   });
 
-  // Notify Lizzy. Email failures are logged but never fail the request —
-  // it's already saved and visible in the admin dashboard.
+  const settings = await getSettings();
+
+  // Notify Lizzy AND send the client a summary. Email failures are logged but
+  // never fail the request — it's already saved and visible in the dashboard.
   await sendAppointmentRequestEmail({
     id: booking.id,
     customerName: booking.customerName,
@@ -83,7 +88,21 @@ export async function createRequestAction(
     startTime: booking.startTime,
     serviceName: service.name,
     priceCents: service.priceCents,
+    depositCents: service.depositCents,
     durationMinutes: service.durationMinutes,
+  });
+
+  await sendClientSummaryEmail({
+    customerName: booking.customerName,
+    customerEmail: booking.customerEmail,
+    startTime: booking.startTime,
+    serviceName: service.name,
+    priceCents: service.priceCents,
+    depositCents: service.depositCents,
+    durationMinutes: service.durationMinutes,
+    businessName: settings.businessName,
+    contactEmail: settings.contactEmail,
+    contactPhone: settings.contactPhone,
   });
 
   return { ok: true, id: booking.id };

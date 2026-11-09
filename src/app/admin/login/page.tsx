@@ -1,13 +1,15 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { loginAction, type LoginState } from "./actions";
+import { EyeIcon, EyeOffIcon } from "@/components/icons";
 
 export default function AdminLoginPage() {
   const [state, action, pending] = useActionState<LoginState, FormData>(
     loginAction,
     {},
   );
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <main className="plum-gradient flex min-h-screen items-center justify-center px-5 py-16 text-paper">
@@ -38,13 +40,27 @@ export default function AdminLoginPage() {
           </label>
           <label className="mt-4 block text-sm text-paper/70">
             Password
-            <input
-              name="password"
-              type="password"
-              required
-              autoComplete="current-password"
-              className="mt-1.5 w-full rounded-lg border border-white/15 bg-white/[0.04] px-4 py-3 text-paper outline-none transition focus:border-gold"
-            />
+            <div className="relative mt-1.5">
+              <input
+                name="password"
+                type={showPassword ? "text" : "password"}
+                required
+                autoComplete="current-password"
+                className="w-full rounded-lg border border-white/15 bg-white/[0.04] px-4 py-3 pr-11 text-paper outline-none transition focus:border-gold"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((s) => !s)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-paper/50 transition hover:text-paper"
+              >
+                {showPassword ? (
+                  <EyeOffIcon className="h-5 w-5" />
+                ) : (
+                  <EyeIcon className="h-5 w-5" />
+                )}
+              </button>
+            </div>
           </label>
           <button
             type="submit"

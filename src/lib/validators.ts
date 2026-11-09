@@ -20,6 +20,7 @@ export const serviceSchema = z.object({
   description: z.string().trim().max(500).optional().default(""),
   durationMinutes: z.coerce.number().int().min(5).max(600),
   priceCents: z.coerce.number().int().min(0).max(1_000_000),
+  depositCents: z.coerce.number().int().min(0).max(1_000_000).optional().default(0),
   active: z.coerce.boolean().optional().default(true),
   sortOrder: z.coerce.number().int().min(0).max(1000).optional().default(0),
 });
@@ -43,4 +44,6 @@ export const settingsSchema = z.object({
   slotIntervalMins: z.coerce.number().int().min(5).max(120),
   leadTimeMins: z.coerce.number().int().min(0).max(10_080),
   maxDaysOut: z.coerce.number().int().min(1).max(365),
+  contactEmail: z.string().trim().max(200).optional().default(""),
+  contactPhone: z.string().trim().max(50).optional().default(""),
 });

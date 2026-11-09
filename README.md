@@ -113,7 +113,20 @@ changes:
 | `npm run db:studio` | Open Prisma Studio to inspect data |
 | `npm run hash -- "pw"` | Generate an admin password hash |
 
+## Email notifications
+
+When a client submits a request, two emails are sent via **Resend**:
+1. **Lizzy** gets the request details (reply-to is the client) — to `NOTIFY_EMAIL`.
+2. **The client** gets a summary of their request plus how to reach Lizzy
+   (her `contactEmail` / `contactPhone`, set in Admin → Availability).
+
+Set `RESEND_API_KEY`, `NOTIFY_EMAIL`, and `FROM_EMAIL` in `.env` (see
+`.env.example`). If unset, requests still save and emails log to the server
+console. **To deliver to any inbox** (not just the Resend account owner's),
+verify a domain in Resend and point `FROM_EMAIL` at it; otherwise the free
+`onboarding@resend.dev` sender only reaches the account owner's own address.
+
 ## Not in v1 (easy to add later)
 
-Email/SMS reminders and online deposits/payments were intentionally left out of
-the first version; the data model and booking flow are structured to add them.
+SMS reminders and online deposits/payments were intentionally left out of the
+first version; the data model and booking flow are structured to add them.

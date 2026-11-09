@@ -127,6 +127,11 @@ export default async function Home() {
                         {formatPrice(service.priceCents)}
                       </span>
                     </div>
+                    {service.depositCents > 0 && (
+                      <p className="mt-2 text-right text-xs font-medium text-brand">
+                        {formatPrice(service.depositCents)} deposit to book
+                      </p>
+                    )}
                     <Link
                       href={`/book?service=${service.id}`}
                       className="mt-5 inline-flex justify-center rounded-full border border-brand/20 py-2.5 text-sm font-semibold text-brand transition group-hover:bg-brand group-hover:text-white"

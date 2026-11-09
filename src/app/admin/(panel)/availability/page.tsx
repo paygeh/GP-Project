@@ -176,6 +176,25 @@ export default async function AvailabilityPage() {
             />
           </label>
           <label className="flex flex-col gap-1">
+            <span className={label}>Contact email (shown to clients)</span>
+            <input
+              name="contactEmail"
+              type="email"
+              placeholder="lizzy@example.com"
+              defaultValue={settings.contactEmail}
+              className={field}
+            />
+          </label>
+          <label className="flex flex-col gap-1">
+            <span className={label}>Contact phone (shown to clients)</span>
+            <input
+              name="contactPhone"
+              placeholder="(555) 123-4567"
+              defaultValue={settings.contactPhone}
+              className={field}
+            />
+          </label>
+          <label className="flex flex-col gap-1">
             <span className={label}>Slot interval (minutes)</span>
             <input
               name="slotIntervalMins"

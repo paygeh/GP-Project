@@ -34,7 +34,7 @@ export function SiteFooter({ businessName }: { businessName: string }) {
                 </li>
                 <li>
                   <Link href="/book" className="hover:text-paper">
-                    Book
+                    Request
                   </Link>
                 </li>
               </ul>
@@ -49,8 +49,16 @@ export function SiteFooter({ businessName }: { businessName: string }) {
             </div>
           </div>
         </div>
-        <div className="mt-12 border-t border-white/10 pt-6 text-xs text-paper/50">
-          © {new Date().getFullYear()} {businessName}. All rights reserved.
+        <div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-paper/50 sm:flex-row sm:items-center sm:justify-between">
+          <span>
+            © {new Date().getFullYear()} {businessName}. All rights reserved.
+          </span>
+          <Link
+            href="/admin"
+            className="text-paper/40 transition hover:text-paper/80"
+          >
+            Stylist login
+          </Link>
         </div>
       </div>
     </footer>

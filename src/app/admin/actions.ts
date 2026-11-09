@@ -35,11 +35,13 @@ export async function updateBookingStatusAction(formData: FormData) {
 /* ─────────────── Services ─────────────── */
 function parseServiceForm(formData: FormData) {
   const priceDollars = Number(formData.get("price") ?? 0);
+  const depositDollars = Number(formData.get("deposit") ?? 0);
   return serviceSchema.parse({
     name: formData.get("name"),
     description: formData.get("description") ?? "",
     durationMinutes: formData.get("durationMinutes"),
     priceCents: Math.round(priceDollars * 100),
+    depositCents: Math.round((depositDollars || 0) * 100),
     active: formData.get("active") === "on" || formData.get("active") === "true",
     sortOrder: formData.get("sortOrder") ?? 0,
   });
@@ -143,6 +145,8 @@ export async function updateSettingsAction(formData: FormData) {
     slotIntervalMins: formData.get("slotIntervalMins"),
     leadTimeMins: formData.get("leadTimeMins"),
     maxDaysOut: formData.get("maxDaysOut"),
+    contactEmail: formData.get("contactEmail") ?? "",
+    contactPhone: formData.get("contactPhone") ?? "",
   });
   await prisma.settings.upsert({
     where: { id: "singleton" },

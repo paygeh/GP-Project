@@ -20,6 +20,7 @@ function ServiceFields({
     name: string;
     description: string;
     priceCents: number;
+    depositCents: number;
     durationMinutes: number;
     sortOrder: number;
     active: boolean;
@@ -48,6 +49,17 @@ function ServiceFields({
           min="0"
           required
           defaultValue={service ? service.priceCents / 100 : ""}
+          className={field}
+        />
+      </label>
+      <label>
+        <span className={label}>Deposit (USD)</span>
+        <input
+          name="deposit"
+          type="number"
+          step="0.01"
+          min="0"
+          defaultValue={service ? service.depositCents / 100 : 0}
           className={field}
         />
       </label>
@@ -129,6 +141,8 @@ export default async function ServicesPage() {
                 </p>
                 <p className="text-sm text-muted">
                   {formatDuration(s.durationMinutes)} · {formatPrice(s.priceCents)}
+                  {s.depositCents > 0 &&
+                    ` · ${formatPrice(s.depositCents)} deposit`}
                 </p>
               </div>
               <span className="text-sm text-muted group-open:hidden">Edit</span>
