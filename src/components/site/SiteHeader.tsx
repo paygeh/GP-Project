@@ -36,7 +36,7 @@ export function SiteHeader({
             href="/book"
             className="rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700"
           >
-            Book now
+            Request appointment
           </Link>
         </nav>
       </div>

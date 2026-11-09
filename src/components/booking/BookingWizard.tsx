@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
-import { getSlotsAction, createBookingAction } from "@/app/book/actions";
+import { getSlotsAction, createRequestAction } from "@/app/book/actions";
 import {
   formatPrice,
   formatDuration,
@@ -28,7 +28,7 @@ type Props = {
   preselectServiceId: string | null;
 };
 
-const STEPS = ["Service", "Date", "Time", "Details", "Confirm"] as const;
+const STEPS = ["Service", "Date", "Time", "Details", "Request"] as const;
 
 function startOfToday() {
   const d = new Date();
@@ -120,7 +120,7 @@ export function BookingWizard({
     if (!service || !slot) return;
     setError(null);
     startTransition(async () => {
-      const res = await createBookingAction({
+      const res = await createRequestAction({
         serviceId: service.id,
         startTime: slot,
         ...details,
@@ -130,7 +130,7 @@ export function BookingWizard({
       } else {
         setError(res.error);
         // If the slot was taken, send them back to re-pick a time.
-        if (/booked|taken|available/i.test(res.error)) {
+        if (/booked|taken|requested|available/i.test(res.error)) {
           setSlot(null);
           setStep(2);
         }
@@ -531,7 +531,7 @@ function DetailsStep({
           type="submit"
           className="rounded-full bg-gold px-7 py-3 text-sm font-semibold text-plum transition hover:bg-gold-200"
         >
-          Review booking
+          Review request
         </button>
       </div>
     </form>
@@ -567,7 +567,7 @@ function ReviewStep({
   ];
   return (
     <div className="animate-fade-in">
-      <StepHeader eyebrow="Step 5" title="Review & confirm" />
+      <StepHeader eyebrow="Step 5" title="Review & request" />
       <dl className="divide-y divide-white/10 rounded-xl border border-white/10 bg-white/[0.03] px-5">
         {rows.map(([k, v]) => (
           <div key={k} className="flex justify-between gap-4 py-3 text-sm">
@@ -582,7 +582,10 @@ function ReviewStep({
           </div>
         )}
       </dl>
-      <div className="mt-6 flex items-center justify-between">
+      <p className="mt-4 text-center text-xs text-paper/60">
+        This sends a request — Lizzy will reach out to confirm your appointment.
+      </p>
+      <div className="mt-4 flex items-center justify-between">
         <BackButton onBack={onBack} />
         <button
           type="button"
@@ -590,7 +593,7 @@ function ReviewStep({
           onClick={onConfirm}
           className="rounded-full bg-gold px-8 py-3.5 text-sm font-semibold text-plum transition hover:bg-gold-200 disabled:opacity-60"
         >
-          {pending ? "Booking…" : "Confirm booking"}
+          {pending ? "Sending…" : "Send request"}
         </button>
       </div>
     </div>

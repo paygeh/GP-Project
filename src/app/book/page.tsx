@@ -4,7 +4,7 @@ import { getSettings } from "@/lib/availability";
 import { Wordmark } from "@/components/site/SiteHeader";
 import { BookingWizard } from "@/components/booking/BookingWizard";
 
-export const metadata = { title: "Book an Appointment" };
+export const metadata = { title: "Request an Appointment" };
 
 export default async function BookPage({
   searchParams,

@@ -15,7 +15,7 @@ export function SiteFooter({ businessName }: { businessName: string }) {
               href="/book"
               className="mt-6 inline-flex rounded-full bg-gold px-6 py-3 text-sm font-semibold text-plum transition hover:bg-gold-200"
             >
-              Book an appointment
+              Request an appointment
             </Link>
           </div>
           <div className="grid grid-cols-2 gap-10 text-sm">

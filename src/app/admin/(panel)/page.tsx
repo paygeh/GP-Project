@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
+import { updateBookingStatusAction } from "@/app/admin/actions";
 import { formatTime, formatDateShort, formatPrice } from "@/lib/format";
 import { CalendarIcon, ClockIcon } from "@/components/icons";
 
@@ -14,45 +15,53 @@ export default async function AdminDashboard() {
   const weekEnd = new Date(todayStart);
   weekEnd.setDate(weekEnd.getDate() + 7);
 
-  const [todays, upcoming, weekCount] = await Promise.all([
+  const [pending, todays, upcoming, weekCount] = await Promise.all([
+    prisma.booking.findMany({
+      where: { status: "PENDING" },
+      orderBy: { startTime: "asc" },
+      take: 10,
+      include: { service: true },
+    }),
     prisma.booking.findMany({
       where: {
-        status: { not: "CANCELLED" },
+        status: "CONFIRMED",
         startTime: { gte: todayStart, lt: todayEnd },
       },
       orderBy: { startTime: "asc" },
       include: { service: true },
     }),
     prisma.booking.findMany({
-      where: { status: { not: "CANCELLED" }, startTime: { gte: now } },
+      where: { status: "CONFIRMED", startTime: { gte: now } },
       orderBy: { startTime: "asc" },
       take: 6,
       include: { service: true },
     }),
     prisma.booking.count({
       where: {
-        status: { not: "CANCELLED" },
+        status: "CONFIRMED",
         startTime: { gte: todayStart, lt: weekEnd },
       },
     }),
   ]);
 
   const stats = [
-    { label: "Appointments today", value: todays.length },
-    { label: "Next 7 days", value: weekCount },
-    { label: "Upcoming total", value: upcoming.length === 6 ? "6+" : upcoming.length },
+    { label: "New requests", value: pending.length, accent: pending.length > 0 },
+    { label: "Confirmed today", value: todays.length, accent: false },
+    { label: "Confirmed next 7 days", value: weekCount, accent: false },
   ];
 
   return (
     <div>
       <h1 className="font-display text-3xl text-ink">Dashboard</h1>
-      <p className="mt-1 text-muted">Here&apos;s what&apos;s on the books.</p>
+      <p className="mt-1 text-muted">Review requests and manage your schedule.</p>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
         {stats.map((s) => (
           <div
             key={s.label}
-            className="rounded-[var(--radius-card)] border border-border bg-card p-6"
+            className={`rounded-[var(--radius-card)] border p-6 ${
+              s.accent ? "border-gold bg-gold-soft" : "border-border bg-card"
+            }`}
           >
             <p className="font-serif text-4xl font-bold text-brand">{s.value}</p>
             <p className="mt-1 text-sm text-muted">{s.label}</p>
@@ -60,7 +69,61 @@ export default async function AdminDashboard() {
         ))}
       </div>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-2">
+      {/* Pending requests — the action queue */}
+      <section className="mt-8 rounded-[var(--radius-card)] border border-border bg-card p-6">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="font-display text-xl text-ink">New requests</h2>
+          <Link
+            href="/admin/appointments?filter=requests"
+            className="text-sm font-medium text-brand hover:underline"
+          >
+            View all →
+          </Link>
+        </div>
+        {pending.length === 0 ? (
+          <p className="py-8 text-center text-sm text-muted">
+            No pending requests. You&apos;re all caught up.
+          </p>
+        ) : (
+          <ul className="divide-y divide-border">
+            {pending.map((b) => (
+              <li
+                key={b.id}
+                className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div>
+                  <p className="font-medium text-ink">{b.customerName}</p>
+                  <p className="text-sm text-muted">
+                    {b.service.name} · {formatDateShort(b.startTime)} at{" "}
+                    {formatTime(b.startTime)}
+                  </p>
+                  <p className="text-sm text-muted">
+                    {b.customerEmail} · {b.customerPhone}
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <form action={updateBookingStatusAction}>
+                    <input type="hidden" name="id" value={b.id} />
+                    <input type="hidden" name="status" value="CONFIRMED" />
+                    <button className="rounded-full bg-brand px-4 py-1.5 text-sm font-medium text-white transition hover:bg-brand-700">
+                      Approve
+                    </button>
+                  </form>
+                  <form action={updateBookingStatusAction}>
+                    <input type="hidden" name="id" value={b.id} />
+                    <input type="hidden" name="status" value="DECLINED" />
+                    <button className="rounded-full border border-red-200 px-4 py-1.5 text-sm font-medium text-red-600 transition hover:bg-red-600 hover:text-white">
+                      Decline
+                    </button>
+                  </form>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <section className="rounded-[var(--radius-card)] border border-border bg-card p-6">
           <div className="mb-4 flex items-center gap-2 text-brand">
             <CalendarIcon className="h-5 w-5" />
@@ -68,7 +131,7 @@ export default async function AdminDashboard() {
           </div>
           {todays.length === 0 ? (
             <p className="py-8 text-center text-sm text-muted">
-              Nothing booked today.
+              Nothing confirmed today.
             </p>
           ) : (
             <ul className="divide-y divide-border">
@@ -97,7 +160,7 @@ export default async function AdminDashboard() {
           <div className="mb-4 flex items-center justify-between">
             <h2 className="font-display text-xl text-ink">Coming up</h2>
             <Link
-              href="/admin/appointments"
+              href="/admin/appointments?filter=upcoming"
               className="text-sm font-medium text-brand hover:underline"
             >
               View all →
@@ -105,7 +168,7 @@ export default async function AdminDashboard() {
           </div>
           {upcoming.length === 0 ? (
             <p className="py-8 text-center text-sm text-muted">
-              No upcoming appointments.
+              No confirmed appointments yet.
             </p>
           ) : (
             <ul className="divide-y divide-border">

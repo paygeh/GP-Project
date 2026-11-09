@@ -23,7 +23,11 @@ export async function updateBookingStatusAction(formData: FormData) {
   await requireAdmin();
   const id = String(formData.get("id") ?? "");
   const status = String(formData.get("status") ?? "");
-  if (!id || !["PENDING", "CONFIRMED", "CANCELLED"].includes(status)) return;
+  if (
+    !id ||
+    !["PENDING", "CONFIRMED", "DECLINED", "CANCELLED"].includes(status)
+  )
+    return;
   await prisma.booking.update({ where: { id }, data: { status } });
   refreshAll();
 }

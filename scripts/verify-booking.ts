@@ -1,7 +1,7 @@
 // End-to-end check of the booking engine (run: npx tsx scripts/verify-booking.ts)
 import { prisma } from "@/lib/db";
 import { getAvailableSlots, isSlotBookable } from "@/lib/availability";
-import { createBookingAction } from "@/app/book/actions";
+import { createRequestAction } from "@/app/book/actions";
 import { toDateKey } from "@/lib/format";
 
 function assert(cond: unknown, msg: string) {
@@ -41,7 +41,7 @@ async function main() {
   const beforeCount = slots.length;
 
   // Create the booking through the real action.
-  const res = await createBookingAction({
+  const res = await createRequestAction({
     serviceId: service.id,
     startTime: chosen.toISOString(),
     customerName: "Test Customer",
@@ -67,7 +67,7 @@ async function main() {
   );
 
   // Double-booking is rejected.
-  const dupe = await createBookingAction({
+  const dupe = await createRequestAction({
     serviceId: service.id,
     startTime: chosen.toISOString(),
     customerName: "Second Customer",
@@ -77,13 +77,13 @@ async function main() {
   });
   assert(!dupe.ok, "a second booking at the same time is rejected");
 
-  // Persisted correctly.
+  // Persisted as a pending request.
   const saved = await prisma.booking.findUnique({ where: { id: bookingId } });
-  assert(saved?.status === "CONFIRMED", "booking persisted as CONFIRMED");
+  assert(saved?.status === "PENDING", "request persisted as PENDING");
 
   // Clean up so dev data stays tidy.
   await prisma.booking.delete({ where: { id: bookingId } });
-  console.log("\nAll checks passed ✅  (test booking removed)\n");
+  console.log("\nAll checks passed ✅  (test request removed)\n");
 }
 
 main()

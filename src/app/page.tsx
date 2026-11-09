@@ -47,14 +47,15 @@ export default async function Home() {
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
               {settings.tagline}. Browse the services, find a time that works for
-              you, and book in under a minute — no phone tag required.
+              you, and send a request in under a minute — Lizzy will reach out to
+              confirm.
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-4">
               <Link
                 href="/book"
                 className="rounded-full bg-brand px-8 py-4 text-sm font-semibold text-white shadow-lg shadow-brand/20 transition hover:bg-brand-700"
               >
-                Book an appointment
+                Request an appointment
               </Link>
               <Link
                 href="#services"
@@ -67,9 +68,9 @@ export default async function Home() {
 
           <div className="mt-16 grid max-w-xl grid-cols-3 gap-6 animate-fade-up">
             {[
-              { icon: CalendarIcon, label: "Real-time openings" },
-              { icon: ClockIcon, label: "Book in 60 seconds" },
-              { icon: CheckIcon, label: "Instant confirmation" },
+              { icon: CalendarIcon, label: "See real openings" },
+              { icon: ClockIcon, label: "Request in 60 seconds" },
+              { icon: CheckIcon, label: "Personal confirmation" },
             ].map(({ icon: Icon, label }) => (
               <div key={label} className="flex flex-col items-start gap-2">
                 <Icon className="h-6 w-6 text-brand" />
@@ -130,7 +131,7 @@ export default async function Home() {
                       href={`/book?service=${service.id}`}
                       className="mt-5 inline-flex justify-center rounded-full border border-brand/20 py-2.5 text-sm font-semibold text-brand transition group-hover:bg-brand group-hover:text-white"
                     >
-                      Book this
+                      Request this
                     </Link>
                   </div>
                 );
@@ -146,7 +147,7 @@ export default async function Home() {
         <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
           <p className="eyebrow text-gold">Simple by design</p>
           <h2 className="mt-3 max-w-xl font-display text-4xl sm:text-5xl">
-            Booking, the easy way
+            Requesting, made easy
           </h2>
           <div className="mt-14 grid gap-10 md:grid-cols-3">
             {[
@@ -157,13 +158,13 @@ export default async function Home() {
               },
               {
                 n: "02",
-                t: "Pick an open time",
-                d: "See real openings on your chosen day and tap the one you want.",
+                t: "Request a time",
+                d: "See real openings on your chosen day and request the one you want.",
               },
               {
                 n: "03",
-                t: "You're booked",
-                d: "Add a few details and you'll get an instant confirmation.",
+                t: "Lizzy confirms",
+                d: "She'll reach out to confirm your appointment — personal and simple.",
               },
             ].map((step) => (
               <div key={step.n}>
@@ -179,7 +180,7 @@ export default async function Home() {
             href="/book"
             className="mt-14 inline-flex rounded-full bg-gold px-8 py-4 text-sm font-semibold text-plum transition hover:bg-gold-200"
           >
-            Start booking
+            Request an appointment
           </Link>
         </div>
       </section>

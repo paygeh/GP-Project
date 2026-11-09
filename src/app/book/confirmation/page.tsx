@@ -5,7 +5,7 @@ import { Wordmark } from "@/components/site/SiteHeader";
 import { CheckIcon } from "@/components/icons";
 import { formatDateLong, formatTime, formatPrice, formatDuration } from "@/lib/format";
 
-export const metadata = { title: "Booking Confirmed" };
+export const metadata = { title: "Request Received" };
 
 export default async function ConfirmationPage({
   searchParams,
@@ -33,17 +33,19 @@ export default async function ConfirmationPage({
       </div>
 
       <div className="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center px-5 pb-20 sm:px-8">
-        {!booking || booking.status === "CANCELLED" ? (
+        {!booking ||
+        booking.status === "CANCELLED" ||
+        booking.status === "DECLINED" ? (
           <div className="animate-fade-up rounded-[var(--radius-card)] border border-white/10 bg-plum-800/70 p-8 text-center backdrop-blur">
-            <h1 className="font-display text-2xl">We couldn&apos;t find that booking</h1>
+            <h1 className="font-display text-2xl">We couldn&apos;t find that request</h1>
             <p className="mt-2 text-paper/70">
-              It may have been cancelled. Try booking again.
+              It may have been cancelled. Try requesting again.
             </p>
             <Link
               href="/book"
               className="mt-6 inline-flex rounded-full bg-gold px-6 py-3 text-sm font-semibold text-plum transition hover:bg-gold-200"
             >
-              Book an appointment
+              Request an appointment
             </Link>
           </div>
         ) : (
@@ -52,12 +54,14 @@ export default async function ConfirmationPage({
               <span className="flex h-16 w-16 items-center justify-center rounded-full bg-gold text-plum">
                 <CheckIcon className="h-8 w-8" />
               </span>
-              <p className="eyebrow mt-5 text-gold">You&apos;re booked</p>
+              <p className="eyebrow mt-5 text-gold">Request received</p>
               <h1 className="mt-2 font-display text-3xl">
-                See you soon, {booking.customerName.split(" ")[0]}!
+                Thanks, {booking.customerName.split(" ")[0]}!
               </h1>
               <p className="mt-2 text-paper/70">
-                A confirmation is on its way to {booking.customerEmail}.
+                Your request has been sent. Lizzy will reach out to{" "}
+                {booking.customerEmail} or {booking.customerPhone} to confirm your
+                appointment.
               </p>
             </div>
 
@@ -90,7 +94,7 @@ export default async function ConfirmationPage({
                 href="/book"
                 className="rounded-full bg-gold px-6 py-3 text-sm font-semibold text-plum transition hover:bg-gold-200"
               >
-                Book another
+                Request another
               </Link>
             </div>
           </div>

@@ -33,9 +33,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Book an Appointment",
+  title: "Request an Appointment",
   description:
-    "Book your next hair appointment online — simple, quick, and anytime.",
+    "Request your next hair appointment online — Lizzy will reach out to confirm.",
 };
 
 export default function RootLayout({

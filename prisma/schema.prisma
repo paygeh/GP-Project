@@ -30,7 +30,8 @@ model Service {
   updatedAt       DateTime  @updatedAt
 }
 
-/// A customer appointment. status is one of: PENDING | CONFIRMED | CANCELLED.
+/// A customer appointment request.
+/// status: PENDING (requested) | CONFIRMED (approved) | DECLINED | CANCELLED.
 model Booking {
   id            String   @id @default(cuid())
   service       Service  @relation(fields: [serviceId], references: [id])
@@ -40,7 +41,7 @@ model Booking {
   customerPhone String
   startTime     DateTime
   endTime       DateTime
-  status        String   @default("CONFIRMED")
+  status        String   @default("PENDING")
   notes         String   @default("")
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

@@ -94,7 +94,9 @@ export async function getAvailableSlots(
     prisma.availabilityRule.findMany({ where: { active: true } }),
     prisma.booking.findMany({
       where: {
-        status: { not: "CANCELLED" },
+        // Pending requests tentatively hold the slot; approved ones keep it.
+        // Declined/cancelled free it back up.
+        status: { in: ["PENDING", "CONFIRMED"] },
         startTime: { lt: dayEnd },
         endTime: { gt: dayStart },
       },

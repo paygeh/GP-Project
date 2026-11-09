@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/db";
 import { getAvailableSlots, isSlotBookable } from "@/lib/availability";
 import { bookingSchema } from "@/lib/validators";
+import { sendAppointmentRequestEmail } from "@/lib/email";
 
 /** Return bookable start times (ISO strings) for a service on a given day. */
 export async function getSlotsAction(
@@ -15,14 +16,17 @@ export async function getSlotsAction(
   return { slots: slots.map((s) => s.toISOString()) };
 }
 
-export type CreateBookingResult =
+export type CreateRequestResult =
   | { ok: true; id: string }
   | { ok: false; error: string };
 
-/** Validate, re-check availability, and persist a booking. */
-export async function createBookingAction(
+/**
+ * Validate, re-check availability, save the appointment as a PENDING request,
+ * and email Lizzy so she can reach out and approve or decline.
+ */
+export async function createRequestAction(
   raw: unknown,
-): Promise<CreateBookingResult> {
+): Promise<CreateRequestResult> {
   const parsed = bookingSchema.safeParse(raw);
   if (!parsed.success) {
     return {
@@ -49,7 +53,7 @@ export async function createBookingAction(
   if (!stillFree) {
     return {
       ok: false,
-      error: "Sorry — that time was just booked. Please choose another slot.",
+      error: "Sorry — that time was just requested. Please choose another slot.",
     };
   }
 
@@ -64,8 +68,22 @@ export async function createBookingAction(
       notes: data.notes ?? "",
       startTime: start,
       endTime: end,
-      status: "CONFIRMED",
+      status: "PENDING",
     },
+  });
+
+  // Notify Lizzy. Email failures are logged but never fail the request —
+  // it's already saved and visible in the admin dashboard.
+  await sendAppointmentRequestEmail({
+    id: booking.id,
+    customerName: booking.customerName,
+    customerEmail: booking.customerEmail,
+    customerPhone: booking.customerPhone,
+    notes: booking.notes,
+    startTime: booking.startTime,
+    serviceName: service.name,
+    priceCents: service.priceCents,
+    durationMinutes: service.durationMinutes,
   });
 
   return { ok: true, id: booking.id };
