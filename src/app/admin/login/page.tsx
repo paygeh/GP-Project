@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState, useState } from "react";
 import { loginAction, type LoginState } from "./actions";
 import { EyeIcon, EyeOffIcon } from "@/components/icons";
@@ -70,6 +71,13 @@ export default function AdminLoginPage() {
             {pending ? "Signing in…" : "Sign in"}
           </button>
         </form>
+
+        <Link
+          href="/"
+          className="mt-6 block text-center text-sm text-paper/60 transition hover:text-paper"
+        >
+          ← Back to home
+        </Link>
       </div>
     </main>
   );

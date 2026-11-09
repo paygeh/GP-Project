@@ -6,6 +6,7 @@ import {
   toggleServiceAction,
 } from "@/app/admin/actions";
 import { formatPrice, formatDuration } from "@/lib/format";
+import { SaveButton } from "@/components/admin/SaveButton";
 
 export const metadata = { title: "Services · Admin" };
 
@@ -116,9 +117,14 @@ export default async function ServicesPage() {
         </summary>
         <form action={createServiceAction} className="mt-4">
           <ServiceFields />
-          <button className="mt-4 rounded-full bg-brand px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700">
-            Add service
-          </button>
+          <div className="mt-4">
+            <SaveButton
+              savedLabel="Added"
+              className="rounded-full bg-brand px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700"
+            >
+              Add service
+            </SaveButton>
+          </div>
         </form>
       </details>
 
@@ -151,9 +157,11 @@ export default async function ServicesPage() {
             <form action={updateServiceAction} className="mt-4">
               <input type="hidden" name="id" value={s.id} />
               <ServiceFields service={s} />
-              <button className="mt-4 rounded-full bg-brand px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700">
-                Save changes
-              </button>
+              <div className="mt-4">
+                <SaveButton className="rounded-full bg-brand px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700">
+                  Save changes
+                </SaveButton>
+              </div>
             </form>
 
             <div className="mt-4 flex gap-3 border-t border-border pt-4">

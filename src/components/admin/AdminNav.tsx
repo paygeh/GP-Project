@@ -8,6 +8,7 @@ const ITEMS = [
   { href: "/admin/appointments", label: "Appointments" },
   { href: "/admin/services", label: "Services" },
   { href: "/admin/availability", label: "Availability" },
+  { href: "/admin/account", label: "Account" },
 ];
 
 export function AdminNav() {

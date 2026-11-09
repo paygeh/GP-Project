@@ -3,6 +3,7 @@
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
 import { createSession, destroySession } from "@/lib/session";
+import { getAdminUser } from "@/lib/admin";
 
 export type LoginState = { error?: string };
 
@@ -13,20 +14,20 @@ export async function loginAction(
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   const password = String(formData.get("password") ?? "");
 
-  const adminEmail = (process.env.ADMIN_EMAIL ?? "").trim().toLowerCase();
-  const hash = process.env.ADMIN_PASSWORD_HASH ?? "";
+  const admin = await getAdminUser();
+  const adminEmail = admin.email.trim().toLowerCase();
 
   const ok =
     adminEmail.length > 0 &&
-    hash.length > 0 &&
+    admin.passwordHash.length > 0 &&
     email === adminEmail &&
-    bcrypt.compareSync(password, hash);
+    bcrypt.compareSync(password, admin.passwordHash);
 
   if (!ok) {
     return { error: "Invalid email or password." };
   }
 
-  await createSession(adminEmail);
+  await createSession(admin.email);
   redirect("/admin");
 }
 

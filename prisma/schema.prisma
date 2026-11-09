@@ -74,6 +74,16 @@ model TimeOff {
   @@index([start])
 }
 
+/// Single admin (stylist) login. id is always "admin".
+/// Seeded from ADMIN_EMAIL / ADMIN_PASSWORD_HASH on first use, then editable
+/// from the admin Account page.
+model AdminUser {
+  id           String   @id @default("admin")
+  email        String
+  passwordHash String
+  updatedAt    DateTime @updatedAt
+}
+
 /// Single-row site settings (id is always "singleton").
 model Settings {
   id               String @id @default("singleton")

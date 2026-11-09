@@ -7,6 +7,7 @@ import {
   updateSettingsAction,
 } from "@/app/admin/actions";
 import { DAY_NAMES, formatDateLong, formatTime } from "@/lib/format";
+import { SaveButton } from "@/components/admin/SaveButton";
 
 export const metadata = { title: "Availability · Admin" };
 
@@ -86,9 +87,11 @@ export default async function AvailabilityPage() {
                     className={field}
                   />
                 </label>
-                <button className="ml-auto rounded-full border border-brand/30 px-4 py-1.5 text-sm font-medium text-brand transition hover:bg-brand hover:text-white">
-                  Save
-                </button>
+                <div className="ml-auto">
+                  <SaveButton className="rounded-full border border-brand/30 px-4 py-1.5 text-sm font-medium text-brand transition hover:bg-brand hover:text-white">
+                    Save
+                  </SaveButton>
+                </div>
               </form>
             );
           })}
@@ -118,9 +121,12 @@ export default async function AvailabilityPage() {
             <span className={label}>Reason (optional)</span>
             <input name="reason" placeholder="Vacation" className={field} />
           </label>
-          <button className="rounded-full bg-brand px-5 py-2 text-sm font-semibold text-white transition hover:bg-brand-700">
+          <SaveButton
+            savedLabel="Added"
+            className="rounded-full bg-brand px-5 py-2 text-sm font-semibold text-white transition hover:bg-brand-700"
+          >
             Add
-          </button>
+          </SaveButton>
         </form>
 
         <ul className="mt-5 divide-y divide-border">
@@ -228,9 +234,9 @@ export default async function AvailabilityPage() {
             />
           </label>
           <div className="sm:col-span-2">
-            <button className="rounded-full bg-brand px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700">
+            <SaveButton className="rounded-full bg-brand px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700">
               Save settings
-            </button>
+            </SaveButton>
           </div>
         </form>
       </section>
