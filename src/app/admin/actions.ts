@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/session";
+import { getSettings } from "@/lib/availability";
+import { sendDecisionEmail } from "@/lib/email";
 import {
   serviceSchema,
   availabilityRuleSchema,
@@ -28,7 +30,30 @@ export async function updateBookingStatusAction(formData: FormData) {
     !["PENDING", "CONFIRMED", "DECLINED", "CANCELLED"].includes(status)
   )
     return;
-  await prisma.booking.update({ where: { id }, data: { status } });
+  const booking = await prisma.booking.update({
+    where: { id },
+    data: { status },
+    include: { service: true },
+  });
+
+  // Email the client when the request is approved, or declined/cancelled.
+  if (["CONFIRMED", "DECLINED", "CANCELLED"].includes(status)) {
+    const settings = await getSettings();
+    await sendDecisionEmail({
+      kind: status === "CONFIRMED" ? "confirmed" : "cancelled",
+      customerName: booking.customerName,
+      customerEmail: booking.customerEmail,
+      startTime: booking.startTime,
+      serviceName: booking.service.name,
+      priceCents: booking.service.priceCents,
+      depositCents: booking.service.depositCents,
+      durationMinutes: booking.service.durationMinutes,
+      businessName: settings.businessName,
+      contactEmail: settings.contactEmail,
+      contactPhone: settings.contactPhone,
+    });
+  }
+
   refreshAll();
 }
 

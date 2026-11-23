@@ -198,6 +198,108 @@ export async function sendClientSummaryEmail(
   }
 }
 
+export type DecisionEmailInput = {
+  kind: "confirmed" | "cancelled";
+  customerName: string;
+  customerEmail: string;
+  startTime: Date;
+  serviceName: string;
+  priceCents: number;
+  depositCents: number;
+  durationMinutes: number;
+  businessName: string;
+  contactEmail: string;
+  contactPhone: string;
+};
+
+/**
+ * Tell the client their request was approved (confirmed) or declined/cancelled.
+ * Never throws.
+ */
+export async function sendDecisionEmail(b: DecisionEmailInput): Promise<void> {
+  const transport = getTransport();
+  const confirmed = b.kind === "confirmed";
+  const firstName = b.customerName.split(" ")[0];
+
+  const contactBits = [
+    b.contactEmail ? `email ${b.contactEmail}` : "",
+    b.contactPhone ? `call or text ${b.contactPhone}` : "",
+  ].filter(Boolean);
+  const contactLine = contactBits.length
+    ? `Questions or need to make a change? ${contactBits.join(" or ")}.`
+    : `Questions? Just reply to this email and Lizzy will help.`;
+
+  const subject = confirmed
+    ? `Your appointment is confirmed — ${b.businessName}`
+    : `Update on your appointment — ${b.businessName}`;
+
+  const intro = confirmed
+    ? `Great news — Lizzy confirmed your appointment! Here are the details:`
+    : `Unfortunately your appointment couldn't be confirmed and has been cancelled.`;
+
+  const text = [
+    `Hi ${firstName},`,
+    ``,
+    intro,
+    ``,
+    `Service:  ${b.serviceName} (${formatDuration(b.durationMinutes)}, ${formatPrice(b.priceCents)})`,
+    confirmed && b.depositCents > 0 ? `Deposit:  ${formatPrice(b.depositCents)} to secure your spot` : ``,
+    `When:     ${formatDateLong(b.startTime)} at ${formatTime(b.startTime)}`,
+    ``,
+    confirmed
+      ? `We look forward to seeing you!`
+      : `That time may be open again — feel free to request another time on the site.`,
+    contactLine,
+    ``,
+    `— ${b.businessName}`,
+  ].join("\n");
+
+  const eyebrow = confirmed ? "Appointment confirmed" : "Appointment update";
+  const html = `
+  <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;color:#1b0f16">
+    <div style="background:#16060f;padding:22px 24px;border-radius:12px 12px 0 0;text-align:center">
+      <p style="margin:0;color:#ff3dab;letter-spacing:.2em;font-size:12px;text-transform:uppercase">${eyebrow}</p>
+      <p style="margin:6px 0 0;color:#fff;font-size:18px">${b.businessName}</p>
+    </div>
+    <div style="border:1px solid #f1dbe8;border-top:none;border-radius:0 0 12px 12px;padding:24px">
+      <p style="margin:0 0 14px">Hi ${firstName}, ${intro}</p>
+      <table style="width:100%;border-collapse:collapse;font-size:14px">
+        ${row("Service", `${b.serviceName} — ${formatDuration(b.durationMinutes)}, ${formatPrice(b.priceCents)}`)}
+        ${confirmed && b.depositCents > 0 ? row("Deposit", `${formatPrice(b.depositCents)} to secure your spot`) : ""}
+        ${row("When", `${formatDateLong(b.startTime)} at ${formatTime(b.startTime)}`)}
+      </table>
+      <p style="margin:18px 0 0;padding:12px 14px;background:#fceaf3;border-radius:8px;font-size:13px">
+        ${
+          confirmed
+            ? "We look forward to seeing you!"
+            : "That time may be open again — feel free to request another time on the site."
+        }
+      </p>
+      <p style="margin:16px 0 0;font-size:13px;color:#7c6670">${contactLine}</p>
+    </div>
+  </div>`;
+
+  if (!transport) {
+    console.log(
+      `\n[email] decision (${b.kind}) (not sent — GMAIL creds not set)\nTo: ${b.customerEmail}\nSubject: ${subject}\n${text}\n`,
+    );
+    return;
+  }
+
+  try {
+    await transport.sendMail({
+      from: fromAddress(),
+      to: b.customerEmail,
+      subject,
+      text,
+      html,
+      replyTo: b.contactEmail || process.env.NOTIFY_EMAIL || undefined,
+    });
+  } catch (err) {
+    console.error("[email] failed to send decision email:", err);
+  }
+}
+
 function row(label: string, value: string): string {
   return `<tr>
     <td style="padding:6px 0;color:#7c6670;width:90px;vertical-align:top">${label}</td>
