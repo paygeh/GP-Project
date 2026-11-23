@@ -3,7 +3,7 @@ import { prisma } from "@/lib/db";
 import { getSettings } from "@/lib/availability";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
-import { serviceIcon, ClockIcon, CalendarIcon, CheckIcon } from "@/components/icons";
+import { serviceIcon, ClockIcon } from "@/components/icons";
 import { formatPrice, formatDuration } from "@/lib/format";
 
 // Always render fresh so service/menu edits in the admin show immediately.
@@ -66,18 +66,6 @@ export default async function Home() {
             </div>
           </div>
 
-          <div className="mt-16 grid max-w-xl grid-cols-3 gap-6 animate-fade-up">
-            {[
-              { icon: CalendarIcon, label: "See real openings" },
-              { icon: ClockIcon, label: "Request in 60 seconds" },
-              { icon: CheckIcon, label: "Personal confirmation" },
-            ].map(({ icon: Icon, label }) => (
-              <div key={label} className="flex flex-col items-start gap-2">
-                <Icon className="h-6 w-6 text-brand" />
-                <span className="text-sm text-muted">{label}</span>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
